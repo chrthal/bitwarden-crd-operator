@@ -17,7 +17,7 @@ def render_template(logger, template):
 
 
 def create_template_secret(logger, secret, filename, template, secret_type):
-    if secret_type != "":
+    if secret_type != "" or None:
         secret.type = secret_type
     else:
         secret.type = "Opaque"
