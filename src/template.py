@@ -16,8 +16,11 @@ def render_template(logger, template):
     return jinja_template.render()
 
 
-def create_template_secret(logger, secret, filename, template):
-    secret.type = "Opaque"
+def create_template_secret(logger, secret, filename, template, secret_type):
+    if secret_type != "":
+        secret.type = secret_type
+    else:
+        secret.type = "Opaque"
     secret.data = {}
     secret.data[filename] = str(
         base64.b64encode(
@@ -35,6 +38,7 @@ def create_managed_secret(spec, name, namespace, logger, body, **kwargs):
     secret_namespace = spec.get('namespace')
     labels = spec.get('labels')
     custom_annotations = spec.get('annotations')
+    custom_type = spec.get('secretType')
 
     unlock_bw(logger)
 
@@ -54,7 +58,7 @@ def create_managed_secret(spec, name, namespace, logger, body, **kwargs):
     secret = kubernetes.client.V1Secret()
     secret.metadata = kubernetes.client.V1ObjectMeta(
         name=secret_name, annotations=annotations, labels=labels)
-    secret = create_template_secret(logger, secret, filename, template)
+    secret = create_template_secret(logger, secret, filename, template, custom_type)
 
     # Garbage collection will delete the generated secret if the owner
     # Is not in the same namespace as the generated secret
@@ -85,6 +89,7 @@ def update_managed_secret(
     secret_namespace = spec.get('namespace')
     labels = spec.get('labels')
     custom_annotations = spec.get('annotations')
+    custom_type = spec.get('secretType')
 
     old_config = None
     old_secret_name = None
@@ -94,11 +99,15 @@ def update_managed_secret(
             body.metadata.annotations['kopf.zalando.org/last-handled-configuration'])
         old_secret_name = old_config['spec'].get('name')
         old_secret_namespace = old_config['spec'].get('namespace')
+        old_secret_type = old_config['spec'].get('type')
     secret_name = spec.get('name')
     secret_namespace = spec.get('namespace')
+    secret_type = spec.get('secretType')
+
+
 
     if old_config is not None and (
-            old_secret_name != secret_name or old_secret_namespace != secret_namespace):
+            old_secret_name != secret_name or old_secret_namespace != secret_namespace or old_secret_type != secret_type):
         # If the name of the secret or the namespace of the secret is different
         # We have to delete the secret an recreate it
         logger.info("Secret name or namespace changed, let's recreate it")

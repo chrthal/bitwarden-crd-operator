@@ -4,9 +4,9 @@ description: Deploy the Bitwarden CRD Operator
 
 type: application
 
-version: "v0.12.0"
+version: "v0.13.0"
 
-appVersion: "0.11.0"
+appVersion: "0.12.0"
 
 keywords:
   - operator
@@ -42,7 +42,7 @@ annotations:
       displayName: Regestry Credentials
       description: Management Object to create regestry secrets from bitwarden
     - kind: BitwardenTemplate
-      version: v1beta6
+      version: v1beta7
       name: bitwarden-template
       displayName: Bitwarden Template
       description: Management Object to create secrets from a jinja template with a bitwarden lookup
@@ -81,7 +81,7 @@ annotations:
           key: value
         annotations:
           key: value
-    - apiVersion: "lerentis.uploadfilter24.eu/v1beta6"
+    - apiVersion: "lerentis.uploadfilter24.eu/v1beta7"
       kind: BitwardenTemplate
       metadata:
         name: test
@@ -92,6 +92,8 @@ annotations:
         labels:
           key: value
         annotations:
+          key: value
+        secretType:
           key: value
         template: |
           ---
