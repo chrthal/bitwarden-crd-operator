@@ -47,7 +47,7 @@ annotations:
       displayName: Bitwarden Template
       description: Management Object to create secrets from a jinja template with a bitwarden lookup
   artifacthub.io/crdsExamples: |
-    - apiVersion: lerentis.uploadfilter24.eu/v1beta6
+    - apiVersion: lerentis.uploadfilter24.eu/v1beta7
       kind: BitwardenSecret
       metadata:
         name: test
@@ -66,7 +66,7 @@ annotations:
           key: value
         annotations:
           key: value
-    - apiVersion: lerentis.uploadfilter24.eu/v1beta6
+    - apiVersion: lerentis.uploadfilter24.eu/v1beta7
       kind: RegistryCredential
       metadata:
         name: test
